@@ -26,7 +26,10 @@
     <body>
         <div class="box">
             <h1> Bienvenido ${log.nombre}.
-                <br>
+                <div class="row float-right">
+                    <a class="btn btn-primary separacion-derecha" href="${svlURL}/edita?usuario-edita=${log.usuario}"> Editar perfil</a>
+                    <a class="btn btn-primary" href="<c:url value="/logOut"/>"> Cerrar sesión</a>
+                </div>
             </h1>
 
         </div>
