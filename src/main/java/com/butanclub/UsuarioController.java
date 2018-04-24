@@ -124,8 +124,10 @@ public class UsuarioController extends HttpServlet {
                 break;
             }
             case "/borraconcierto": {
+                int conciertoBorra=Integer.parseInt(request.getParameter("concierto-borra"));
+                conciertos.borra(conciertoBorra);
 
-                response.sendRedirect("/ButanClub/conciertos");
+                response.sendRedirect(svlURL);
                 return;
             }
 

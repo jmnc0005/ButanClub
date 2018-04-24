@@ -47,28 +47,28 @@
                             <label>Fecha Nacimiento: <input type="date" value="${usuario.fNacimiento}" required name="fecha" class="form-control"></label>
 
                             <label>Teléfono: <input type="tel" name="tlfn" value="${usuario.telefono}" required class="form-control"></label>
-                            <//c:if test="${log.tipoUsuario == 'Administrador'}">
+                            <c:if test="${pageContext.request.isUserInRole('Administrador')}">
                             <label>Tipo Usuario: <select value="${log.tipoUsuario}" name="tipoUsuario" class="form-control">
 
                                     <option default value="Administrador">Administrador</option>
                                     <option value="Registrado">Registrado</option>
                                     <option value="Artista">Artista</option>
                                 </select></label>
-                            <///c:if>
-                            <//c:if test="${log.tipoUsuario == 'Artista'}">
+                            </c:if>
+                            <c:if test="${pageContext.request.isUserInRole('Artista')}">
                             <label>Tipo Usuario: <select value="${log.tipoUsuario}" name="tipoUsuario" class="form-control">
                                     <option default value="Artista">Artista</option>
                                     <option value="Registrado">Registrado</option>
 
                                 </select></label>
-                            <//c:if>
-                            <//c:if test="${log.tipoUsuario == 'Registrado'}">
+                            </c:if>
+                            <c:if test="${pageContext.request.isUserInRole('Registrado')}">
                             <label>Tipo Usuario: <select value="${log.tipoUsuario}" name="tipoUsuario" class="form-control">
 
                                     <option default value="Registrado">Registrado</option>
 
                                 </select></label>
-                            <//c:if>
+                            </c:if>
 
                         </fieldset>
 
