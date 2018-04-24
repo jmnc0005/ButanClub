@@ -70,7 +70,7 @@
                         </fieldset>
 
                         <input type="submit" name="Login" value="Entrar" class="btn btn-primary">
-                        <a class="btn-link btn" href='${svlURL}/RegistroUsuario' >Registrarse</a>
+                        <a class="btn-link btn" href='/ButanClub/registro' >Registrarse</a>
                     </form>
                 </center>
             </div>

@@ -8,12 +8,12 @@
               type="javax.sql.DataSource"
               url="jdbc:derby://localhost:1527/ButanClub"
               username="butan"/>
-              <Realm className="org.apache.catalina.realm.UserDatabaseRealm" resourceName="UserDatabase"/>
+              <!--<Realm className="org.apache.catalina.realm.UserDatabaseRealm" resourceName="UserDatabase"/>
+-->
 
-
-   <!-- <Realm className="org.apache.catalina.realm.DataSourceRealm"
+    <Realm className="org.apache.catalina.realm.DataSourceRealm"
            dataSourceName="jdbc/ButanClub"
-           localCataSource="true"
+           localDataSource="true"
            userTable="Usuarios"
            userNameCol="usuario"
            UserCredCol="pass"
@@ -21,7 +21,7 @@
            roleNameCol="tipoUsuario"
     />
 
-    -->
+    
 
 
 </Context>
