@@ -5,7 +5,7 @@
     <a class="navbar-brand" href="/ButanClub">BUTAN <span>Club</span></a>
     <div class="nav-content row">
         <a class="nav-link" href="/ButanClub">Inicio <span class="sr-only">(current)</span></a>
-        <a class="nav-link" href="/ButanClub/conciertos/proximos">Conciertos</a>
+        <a class="nav-link" href="/ButanClub/conciertos/listado">Conciertos</a>
         <c:if test="${empty pageContext.request.remoteUser}">
         <a class="nav-link" href="/ButanClub/usuarios">Acceso</a>
         </c:if>
