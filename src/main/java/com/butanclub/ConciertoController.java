@@ -6,21 +6,28 @@
 package com.butanclub;
 
 import com.butanclub.dao.ConciertoDAO;
-import com.butanclub.dao.EntradaDAO;
+import com.butanclub.dao.EntradaDAO;/*
 import com.butanclub.jdbc.ConciertoDAOjdbc;
-import com.butanclub.jdbc.EntradaDAOjdbc;
+import com.butanclub.jdbc.EntradaDAOjdbc;*/
 import com.butanclub.model.Concierto;
-import com.butanclub.model.Entrada;
-import com.butanclub.model.Usuario;
+import com.butanclub.model.Entrada;/*
+import com.butanclub.model.Usuario;*/
 import java.io.IOException;
-import java.util.List;
+import java.util.List;/*
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServlet;*/
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 /**
  *
@@ -32,32 +39,31 @@ y por encima de donde iría para que no pete todavia*/
 /*
 
 SPRING:
-
+*/
 @Controller 
 @RequestMapping("/conciertos")   
-@SessionAtributes("usuario")      -- Identifica el usuario del contexto de sesion
+@SessionAttributes("usuario")    //  -- Identifica el usuario del contexto de sesion
 public class ConciertoController {
 
 
 
-*/
+/*
 @WebServlet(name = "controlConciertos", urlPatterns = {"/conciertos/*"})
 public class ConciertoController extends HttpServlet {
-
+*/
     /*
     SPRING:
-    
+    */
     @Autowired
     private EntradaDAO entradas;
     
-    @Autoqired 
+    @Autowired 
     private ConciertoDAO conciertos;
     
-    String srvViewPath = "/WEB-INF/conciertos";
     
     
     public ConciertoController(){}
-    */
+    /*
     private EntradaDAO entradas;
     private ConciertoDAO conciertos;
     String svlURL;
@@ -76,14 +82,16 @@ public class ConciertoController extends HttpServlet {
     
     /*
     SPRING:
-    
+    */
+
     @ModelAttribute
     private void configView(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
     
-    model.addAttribute("svlURL", request.getContexPath()+request.getServletPath()+"/conciertos");
+    model.addAttribute("svlURL", request.getContextPath()+request.getServletPath()+"/conciertos");
     model.addAttribute("listadoConciertos",conciertos.buscaTodos().toArray());
     
-    */
+    }
+    /*
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
@@ -105,38 +113,39 @@ public class ConciertoController extends HttpServlet {
         request.setAttribute("svlURL", svlURL);
         request.setCharacterEncoding("UTF-8");
 
-    }
+    }*/
 /*
     SPRING:
-    
+    */
     
     @RequestMapping(value="",method=RequestMethod.GET)
     public String proximosconciertos(ModelMap model){
-        List<Conciertos> proximosConciertos=conciertos.buscaProximosConciertos();
-        model.addAttribute("listadoProximosConciertos",proximosconciertos);
-        return "conciertos/inicio"
+        List<Concierto> proximosConciertos=conciertos.buscaProximosConciertos();
+        model.addAttribute("listadoProximosConciertos",proximosConciertos);
+        return "conciertos/inicio";
     }
     
     
-    @RequestMapping(value"/listado",method=RequestMethod.GET)
+   @RequestMapping(value = "/listado", method=RequestMethod.GET)
     public String listado(ModelMap model){
-        List<Conciertos> conciertos=conciertos.buscaTodos();
-        model.addAttribute("listadoConciertos",proximosconciertos);
-        return "conciertos/conciertos"
+        List<Concierto> listaConciertos=conciertos.buscaTodos();
+        model.addAttribute("listadoConciertos",listaConciertos);
+        return "conciertos/conciertos";
     }
     
     
-    @RequestMapping(value"/solicitarSala",method=RequestMethod.GET)
-    public String solicitarSala(ModelMap model, HttpServletResponse response){
+    @RequestMapping(value = "/solicitarSala", method=RequestMethod.GET)
+    public String solicitarSala(ModelMap model, HttpServletRequest request, HttpServletResponse response) throws IOException{
         Concierto c=new Concierto();
        if (validaConcierto(request, c)) {
             conciertos.crea(c);
             
             response.sendRedirect("/ButanClub/usuarios");
         }
+       return "redirect:.";
     }
     
-    */
+    /*
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -170,20 +179,13 @@ public class ConciertoController extends HttpServlet {
         }
 
         rd.forward(request, response);
-    }
+    }*/
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    
     /*
     
     SPRING:
-    
+    */
     @RequestMapping(value = "/compraEntrada", method=RequestMethod.POST)
     public String compraEntrada(ModelMap model, HttpServletRequest request){
     int idconcierto = Integer.parseInt(request.getParameter("idconcierto"));
@@ -207,7 +209,7 @@ public class ConciertoController extends HttpServlet {
     
     return "conciertos/confirmacioncompra";
     }
-    */  
+    /*  
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -240,7 +242,7 @@ public class ConciertoController extends HttpServlet {
 
         }
         rd.forward(request, response);
-    }
+    }*/
 
     private boolean validaConcierto(HttpServletRequest request, Concierto c) {
         c.setNombre(request.getParameter("nombre"));
@@ -258,10 +260,10 @@ public class ConciertoController extends HttpServlet {
      * Returns a short description of the servlet.
      *
      * @return a String containing servlet description
-     */
+     *
     @Override
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
+*/
 }
