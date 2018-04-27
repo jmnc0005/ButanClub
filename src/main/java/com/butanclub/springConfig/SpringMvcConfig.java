@@ -25,28 +25,30 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = {"com.butanclub.springConfig"})
+@ComponentScan(basePackages = {"com.butanclub"})
 public class SpringMvcConfig implements WebMvcConfigurer {
 
- /** This is intended to be used when the Spring MVC DispatcherServlet is mapped 
-  * to "/" thus overriding the Servlet container's default handling of static resources.
-  */
+    /**
+     * This is intended to be used when the Spring MVC DispatcherServlet is
+     * mapped to "/" thus overriding the Servlet container's default handling of
+     * static resources.
+     */
 //  @Override
 //    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
 //        configurer.enable();
 //    }
-
     @Bean
     public DataSource getDataSource() throws NamingException {
         Context ctx = new InitialContext();
         DataSource ds = (DataSource) ctx.lookup("java:/comp/env/jdbc/ButanClub");
         return ds;
     }
-    
-    @Bean public JdbcTemplate getJdbcTemplate(DataSource ds) {
+
+    @Bean
+    public JdbcTemplate getJdbcTemplate(DataSource ds) {
         return new JdbcTemplate(ds);
     }
-    
+
     @Bean(name = "viewResolver")
     public InternalResourceViewResolver getViewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();

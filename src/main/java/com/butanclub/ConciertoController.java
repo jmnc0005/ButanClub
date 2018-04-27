@@ -36,33 +36,30 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 /*voy a ir poniendo las cosillas de spring entre comentarios
 y por encima de donde iría para que no pete todavia*/
-/*
+ /*
 
 SPRING:
-*/
-@Controller 
-@RequestMapping("/conciertos")   
+ */
+@Controller
+@RequestMapping("/conciertos")
 @SessionAttributes("usuario")    //  -- Identifica el usuario del contexto de sesion
 public class ConciertoController {
 
-
-
-/*
+    /*
 @WebServlet(name = "controlConciertos", urlPatterns = {"/conciertos/*"})
 public class ConciertoController extends HttpServlet {
-*/
-    /*
+     */
+ /*
     SPRING:
-    */
+     */
     @Autowired
     private EntradaDAO entradas;
-    
-    @Autowired 
+    @Autowired
     private ConciertoDAO conciertos;
-    
-    
-    
-    public ConciertoController(){}
+
+    public ConciertoController() {
+    }
+
     /*
     private EntradaDAO entradas;
     private ConciertoDAO conciertos;
@@ -78,19 +75,18 @@ public class ConciertoController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    
-    
-    /*
-    SPRING:
-    */
 
+ /*
+    SPRING:
+     */
     @ModelAttribute
     private void configView(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-    
-    model.addAttribute("svlURL", request.getContextPath()+request.getServletPath()+"/conciertos");
-    model.addAttribute("listadoConciertos",conciertos.buscaTodos().toArray());
-    
+
+        model.addAttribute("svlURL", request.getContextPath() + request.getServletPath() + "/conciertos");
+        model.addAttribute("listadoConciertos", conciertos.buscaTodos().toArray());
+
     }
+
     /*
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
@@ -114,37 +110,34 @@ public class ConciertoController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
     }*/
-/*
+ /*
     SPRING:
-    */
-    
-    @RequestMapping(value="",method=RequestMethod.GET)
-    public String proximosconciertos(ModelMap model){
-        List<Concierto> proximosConciertos=conciertos.buscaProximosConciertos();
-        model.addAttribute("listadoProximosConciertos",proximosConciertos);
+     */
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public String proximosconciertos(ModelMap model) {
+        List<Concierto> proximosConciertos = conciertos.buscaProximosConciertos();
+        model.addAttribute("listadoProximosConciertos", proximosConciertos);
         return "conciertos/inicio";
     }
-    
-    
-   @RequestMapping(value = "/listado", method=RequestMethod.GET)
-    public String listado(ModelMap model){
-        List<Concierto> listaConciertos=conciertos.buscaTodos();
-        model.addAttribute("listadoConciertos",listaConciertos);
+
+    @RequestMapping(value = "/listado", method = RequestMethod.GET)
+    public String listado(ModelMap model) {
+        List<Concierto> listaConciertos = conciertos.buscaTodos();
+        model.addAttribute("listadoConciertos", listaConciertos);
         return "conciertos/conciertos";
     }
-    
-    
-    @RequestMapping(value = "/solicitarSala", method=RequestMethod.GET)
-    public String solicitarSala(ModelMap model, HttpServletRequest request, HttpServletResponse response) throws IOException{
-        Concierto c=new Concierto();
-       if (validaConcierto(request, c)) {
+
+    @RequestMapping(value = "/solicitarSala", method = RequestMethod.GET)
+    public String solicitarSala(ModelMap model, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Concierto c = new Concierto();
+        if (validaConcierto(request, c)) {
             conciertos.crea(c);
-            
+
             response.sendRedirect("/ButanClub/usuarios");
         }
-       return "redirect:.";
+        return "redirect:.";
     }
-    
+
     /*
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -180,36 +173,35 @@ public class ConciertoController extends HttpServlet {
 
         rd.forward(request, response);
     }*/
+ /*
 
-    
-    /*
-    
     SPRING:
-    */
-    @RequestMapping(value = "/compraEntrada", method=RequestMethod.POST)
-    public String compraEntrada(ModelMap model, HttpServletRequest request){
-    int idconcierto = Integer.parseInt(request.getParameter("idconcierto"));
-    Concierto c = conciertos.buscaConcierto(idconcierto);
-    model.addAttribute("conciertocompra",c);
-    return "conciertos/comprar-entrada";
+     */
+    @RequestMapping(value = "/compraEntrada", method = RequestMethod.POST)
+    public String compraEntrada(ModelMap model, HttpServletRequest request) {
+        int idconcierto = Integer.parseInt(request.getParameter("idconcierto"));
+        Concierto c = conciertos.buscaConcierto(idconcierto);
+        model.addAttribute("conciertocompra", c);
+        return "conciertos/comprar-entrada";
     }
-    
-     @RequestMapping(value = "/confirmacioncompra", method=RequestMethod.POST)
-    public String confirmacioncompra(ModelMap model, HttpServletRequest request){
+
+    @RequestMapping(value = "/confirmacioncompra", method = RequestMethod.POST)
+    public String confirmacioncompra(ModelMap model, HttpServletRequest request) {
         String usuario = request.getParameter("usuario-comprador");
         int idConcierto = Integer.parseInt(request.getParameter("concierto-comprado"));
         int cantidad = Integer.parseInt(request.getParameter("numero-entradas"));
 
         Concierto c = conciertos.buscaConcierto(idConcierto);
-       model.addAttribute("conciertoCompra", c);
+        model.addAttribute("conciertoCompra", c);
 
         Entrada entrada = new Entrada(usuario, idConcierto, cantidad);
         entradas.crea(entrada);
         model.addAttribute("entrada", entrada);
-    
-    return "conciertos/confirmacioncompra";
+
+        return "conciertos/confirmacioncompra";
     }
-    /*  
+
+    /*
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -243,7 +235,6 @@ public class ConciertoController extends HttpServlet {
         }
         rd.forward(request, response);
     }*/
-
     private boolean validaConcierto(HttpServletRequest request, Concierto c) {
         c.setNombre(request.getParameter("nombre"));
         c.setArtista(request.getParameter("artista"));
@@ -261,9 +252,7 @@ public class ConciertoController extends HttpServlet {
      *
      * @return a String containing servlet description
      *
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-*/
+     * @Override public String getServletInfo() { return "Short description";
+     * }// </editor-fold>
+     */
 }

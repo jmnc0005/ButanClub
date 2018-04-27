@@ -20,7 +20,7 @@
 
 
         <div class="box-index">
-            <%@include file="//WEB-INF/templates/modulos/proximos-conciertos.jspf" %>
+            <%@include file="/WEB-INF/templates/modulos/proximos-conciertos.jspf" %>
         </div>
 
 

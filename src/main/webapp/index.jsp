@@ -12,6 +12,6 @@
 
     </head>
 
-    <jsp:include page="conciertos"/>
+    <jsp:include page="main/conciertos"/>
 
 </html>

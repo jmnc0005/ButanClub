@@ -19,11 +19,13 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author Jose Manuel Navarro
  */
+@Repository
 public class EntradaDAOjdbc implements EntradaDAO {
 
     private static final String connPoolName = "java:comp/env/jdbc/ButanClub";  //Tomcat

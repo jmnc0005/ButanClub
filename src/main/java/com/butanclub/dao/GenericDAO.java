@@ -6,6 +6,7 @@
 package com.butanclub.dao;
 
 import java.util.List;
+import org.springframework.stereotype.Repository;
 
 /**
  *
@@ -13,16 +14,16 @@ import java.util.List;
  * @param <T>
  * @param <K>
  */
-public interface GenericDAO<T,K> {
-    
+@Repository
+public interface GenericDAO<T, K> {
+
     //public T buscaID(K id);
-    
     public List<T> buscaTodos();
-    
+
     public boolean crea(T u);
-    
+
     public boolean guarda(T u);
-    
+
     public boolean borra(K id);
-    
+
 }
