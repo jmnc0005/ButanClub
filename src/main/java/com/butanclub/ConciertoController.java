@@ -119,6 +119,7 @@ public class ConciertoController extends HttpServlet {
         List<Concierto> proximosConciertos = conciertos.buscaProximosConciertos();
         model.addAttribute("listadoProximosConciertos", proximosConciertos);
         return "conciertos/inicio";
+        
     }
 
     @RequestMapping(value = "/listado", method = RequestMethod.GET)
