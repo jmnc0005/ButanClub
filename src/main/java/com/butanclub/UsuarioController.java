@@ -9,15 +9,7 @@ import com.butanclub.dao.UsuarioDAO;
 import com.butanclub.jdbc.UsuarioDAOjdbc;
 import com.butanclub.model.Usuario;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -25,28 +17,45 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.butanclub.ConciertoController;
 import com.butanclub.dao.ConciertoDAO;
 import com.butanclub.jdbc.ConciertoDAOjdbc;
 import com.butanclub.model.Concierto;
 import javax.servlet.annotation.HttpConstraint;
 import javax.servlet.annotation.ServletSecurity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 /**
  *
  * @author Pedro Luis
  */
-@WebServlet(urlPatterns = {"/usuarios/*"})
-@ServletSecurity(
-        @HttpConstraint(rolesAllowed = {"Administrador", "Artista", "Registrado"}))
+//
+//
+@Controller
+@RequestMapping("/usuarios")
+@SessionAttributes("usuario")
+public class UsuarioController {
+//@WebServlet(urlPatterns = {"/usuarios/*"})
+//@ServletSecurity(
+//        @HttpConstraint(rolesAllowed = {"Administrador", "Artista", "Registrado"}))
+//
+//public class UsuarioController extends HttpServlet {
 
-public class UsuarioController extends HttpServlet {
-
+    @Autowired
     private UsuarioDAO usuarios;
+    @Autowired
     private ConciertoDAO conciertos;
-    String svlURL;
-    final String srvViewPath = "/WEB-INF/usuarios";
+//    String svlURL;
+//    final String srvViewPath = "/WEB-INF/usuarios";
+
+    public UsuarioController() {
+
+    }
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -57,30 +66,36 @@ public class UsuarioController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
-    public void init(ServletConfig servletConfig) throws ServletException {
-        super.init(servletConfig);
-
-        svlURL = servletConfig.getServletContext().getContextPath() + "/usuarios";
-
-        usuarios = new UsuarioDAOjdbc();
-        conciertos = new ConciertoDAOjdbc();
+//    @Override
+//    public void init(ServletConfig servletConfig) throws ServletException {
+//        super.init(servletConfig);
+//
+//        svlURL = servletConfig.getServletContext().getContextPath() + "/usuarios";
+//
+//        usuarios = new UsuarioDAOjdbc();
+//        conciertos = new ConciertoDAOjdbc();
+//    }
+    @ModelAttribute
+    private void configView(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+        model.addAttribute("svlURL", request.getContextPath() + request.getServletPath() + "/usuarios");
+        model.addAttribute("listadoConciertos", conciertos.buscaTodos().toArray());
+        model.addAttribute("listadoUsuarios", usuarios.buscaTodos().toArray());
     }
-
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        response.setContentType("text/html");
-        request.setAttribute("svlURL", svlURL);
-        request.setCharacterEncoding("UTF-8");
-
-        if (request.authenticate(response)) {
-
-            Usuario usuario = usuarios.buscaUsuario(request.getRemoteUser());
-            request.setAttribute("log", usuario);
-        }
-
-    }
+//
+//    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException {
+//        response.setContentType("text/html;charset=UTF-8");
+//        response.setContentType("text/html");
+//        request.setAttribute("svlURL", svlURL);
+//        request.setCharacterEncoding("UTF-8");
+//
+//        if (request.authenticate(response)) {
+//
+//            Usuario usuario = usuarios.buscaUsuario(request.getRemoteUser());
+//            request.setAttribute("log", usuario);
+//        }
+//
+//    }
 
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -90,90 +105,160 @@ public class UsuarioController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+//    @Override
+//    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException {
+//
+//        processRequest(request, response);
+//        RequestDispatcher rd = null;
+//        String action = (request.getPathInfo() != null ? request.getPathInfo() : "");
+//
+//        switch (action) {
+//
+    @RequestMapping(value = "/edita", method = RequestMethod.GET)
+    public String edita(ModelMap model, HttpServletRequest request) {
+        String usuarioEdita = request.getParameter("usuario-edita");
+        Usuario usu = usuarios.buscaUsuario(usuarioEdita);
+        model.addAttribute("usuario", usu);
+        return "usuarios/EditaUsuario";
+    }
+//            case "/edita": {
+//                String usuarioEdita = request.getParameter("usuario-edita");
+//                Usuario usu = usuarios.buscaUsuario(usuarioEdita);
+//                request.setAttribute("usuario", usu);
+//                rd = request.getRequestDispatcher(srvViewPath + "/EditaUsuario.jsp");
+//                break;
+//            }
 
-        processRequest(request, response);
-        RequestDispatcher rd = null;
-        String action = (request.getPathInfo() != null ? request.getPathInfo() : "");
+    @RequestMapping(value = "/borra", method = RequestMethod.GET)
+    public String borra(ModelMap model, HttpServletRequest request) {
+        String usuarioBorra = request.getParameter("usuario-borra");
+        usuarios.borra(usuarioBorra);
+        List<Usuario> lu = usuarios.buscaTodos();
+        model.addAttribute("listadoUsuarios", lu);
+        return "redirect:.";
+    }
+//            case "/borra": {
+//                String usuarioBorra = request.getParameter("usuario-borra");
+//                usuarios.borra(usuarioBorra);
+//                List<Usuario> lu = usuarios.buscaTodos();
+//                request.setAttribute("listadoUsuarios", lu);
+//                rd = request.getRequestDispatcher(srvViewPath + "/infoUsuario.jsp");
+//                break;
+//            }
 
-        switch (action) {
+    @RequestMapping(value = "/RegistroUsuario", method = RequestMethod.GET)
+    public String registroUsuario(ModelMap model) {
+        Usuario usu = new Usuario();
+        model.addAttribute("usuario", usu);
+        return "usuarios/RegistroUsuario";
+    }
+//            case "/RegistroUsuario": {
+//                Usuario usu = new Usuario();
+//                request.setAttribute("usuario", usu);
+//                rd = request.getRequestDispatcher(srvViewPath + "/RegistroUsuario.jsp");
+//                break;
+//            }
 
-            case "/edita": {
-                String usuarioEdita = request.getParameter("usuario-edita");
-                Usuario usu = usuarios.buscaUsuario(usuarioEdita);
-                request.setAttribute("usuario", usu);
-                rd = request.getRequestDispatcher(srvViewPath + "/EditaUsuario.jsp");
-                break;
-            }
-            case "/borra": {
-                String usuarioBorra = request.getParameter("usuario-borra");
-                usuarios.borra(usuarioBorra);
-                //response.sendRedirect(svlURL);
-                //response.sendRedirect(srvViewPath + "/infoUsuario.jsp");
-                List<Usuario> lu = usuarios.buscaTodos();
-                request.setAttribute("listadoUsuarios", lu);
-                rd = request.getRequestDispatcher(srvViewPath + "/infoUsuario.jsp");
-                break;
-            }
-            case "/RegistroUsuario": {
-                Usuario usu = new Usuario();
-                request.setAttribute("usuario", usu);
-                rd = request.getRequestDispatcher(srvViewPath + "/RegistroUsuario.jsp");
-                break;
-            }
-            case "/borraconcierto": {
-                int conciertoBorra=Integer.parseInt(request.getParameter("concierto-borra"));
-                conciertos.borra(conciertoBorra);
+    @RequestMapping(value = "/borraConcierto", method = RequestMethod.GET)
+    public String borraConcierto(ModelMap model, HttpServletRequest request) {
+        int conciertoBorra = Integer.parseInt(request.getParameter("concierto-borra"));
+        conciertos.borra(conciertoBorra);
+        return "redirect:.";
+    }
+//            case "/borraconcierto": {
+//                int conciertoBorra = Integer.parseInt(request.getParameter("concierto-borra"));
+//                conciertos.borra(conciertoBorra);
+//
+//                response.sendRedirect(svlURL);
+//                return;
+//            }
+//
 
-                response.sendRedirect(svlURL);
-                return;
-            }
+    @RequestMapping(value = "/acceso", method = RequestMethod.GET)
+    public String acceso(ModelMap model, HttpServletRequest request) {
+        List<Concierto> lc = conciertos.buscaTodos();
+        model.addAttribute("listadoconciertos", lc);
+        Usuario usuario = usuarios.buscaUsuario(request.getRemoteUser());
+        String IdUsuario = usuario.getUsuario();
+        List<Concierto> lcu = conciertos.buscaConciertosUsuario(IdUsuario);
+        model.addAttribute("listadoConciertosUsuario", lc);
+        List<Usuario> lu = usuarios.buscaTodos();
+        model.addAttribute("listadoUsuario", lu);
+        model.addAttribute("log", usuario);
+        return "usuarios/infoUsuarioAdministrador";
+    }
+//            case "/acceso": {
+//                //cargamos los conciertos
+//                List<Concierto> lc = conciertos.buscaTodos();
+//
+//                request.getSession().setAttribute("listadoConciertos", lc);
+//
+//                //cargamos los conciertos del usuario
+//                Usuario usuario = usuarios.buscaUsuario(request.getRemoteUser());
+//                String IDUsuario = usuario.getUsuario();
+//                List<Concierto> lcu = conciertos.buscaConciertosUsuario(IDUsuario);
+//
+//                request.getSession().setAttribute("listadoConciertosUsuario", lcu);
+//
+//                //cargamos los usuarios
+//                List<Usuario> lu = usuarios.buscaTodos();
+//                request.setAttribute("listadoUsuarios", lu);
+//
+//                request.getSession().setAttribute("log", usuario);
+//                rd = request.getRequestDispatcher(srvViewPath + "/infoUsuarioAdministrador.jsp");
+//                break;
+//            }
+//
 
-            case "/acceso": {
-                //cargamos los conciertos
-                List<Concierto> lc = conciertos.buscaTodos();
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public String poorDefecto(ModelMap model, HttpServletRequest request) {
+        String url = "redirect:.";
+        List<Concierto> lc = conciertos.buscaTodos();
+        model.addAttribute("listadoconciertos", lc);
+        Usuario usuario = usuarios.buscaUsuario(request.getRemoteUser());
+        String IdUsuario = usuario.getUsuario();
+        List<Concierto> lcu = conciertos.buscaConciertosUsuario(IdUsuario);
+        model.addAttribute("listadoConciertosUsuario", lcu);
+        List<Usuario> lu = usuarios.buscaTodos();
+        model.addAttribute("listadoUsuario", lu);
+        model.addAttribute("log", usuario);
+        if (request.isUserInRole("Registrado")) {
 
-                request.getSession().setAttribute("listadoConciertos", lc);
-
-                //cargamos los conciertos del usuario
-                Usuario usuario = usuarios.buscaUsuario(request.getRemoteUser());
-                String IDUsuario = usuario.getUsuario();
-                List<Concierto> lcu = conciertos.buscaConciertosUsuario(IDUsuario);
-
-                request.getSession().setAttribute("listadoConciertosUsuario", lcu);
-
-                //cargamos los usuarios
-                List<Usuario> lu = usuarios.buscaTodos();
-                request.setAttribute("listadoUsuarios", lu);
-
-                request.getSession().setAttribute("log", usuario);
-                rd = request.getRequestDispatcher(srvViewPath + "/infoUsuarioAdministrador.jsp");
-                break;
-            }
-
-            default:
-                if (request.isUserInRole("Registrado")) {
-                    rd = request.getRequestDispatcher(srvViewPath + "/infoUsuario.jsp");
-                }
-
-                if (request.isUserInRole("Artista")) {
-                    rd = request.getRequestDispatcher(srvViewPath + "/infoUsuarioArtista.jsp");
-                }
-
-                if (request.isUserInRole("Administrador")) {
-                    response.sendRedirect(svlURL + "/acceso");
-                    return;
-                }
-
-                break;
-
+            url = "usuarios/infoUsuario";
         }
+        if (request.isUserInRole("Artista")) {
 
-        rd.forward(request, response);
+            url = "usuario/infoUsuarioArtista";
+        }
+        if (request.isUserInRole("Administrador")) {
+//        url="redirect:/acceso";
+
+            url = "usuarios/infoUsuarioAdministrador";
+        }
+        return url;
     }
 
+//            default:
+//                if (request.isUserInRole("Registrado")) {
+//                    rd = request.getRequestDispatcher(srvViewPath + "/infoUsuario.jsp");
+//                }
+//
+//                if (request.isUserInRole("Artista")) {
+//                    rd = request.getRequestDispatcher(srvViewPath + "/infoUsuarioArtista.jsp");
+//                }
+//
+//                if (request.isUserInRole("Administrador")) {
+//                    response.sendRedirect(svlURL + "/acceso");
+//                    return;
+//                }
+//
+//                break;
+//
+//        }
+//
+//        rd.forward(request, response);
+//    }
     /**
      * Handles the HTTP <code>POST</code> method.
      *
@@ -182,49 +267,71 @@ public class UsuarioController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-        RequestDispatcher rd = request.getRequestDispatcher("");
-
-        String action = (request.getPathInfo() != null ? request.getPathInfo() : "");
-        switch (action) {
-
-            case "/edita": {
-                Usuario usu = new Usuario();
-                if (validaUsuario(request, usu)) {
-                    usu.setTipoUsuario(request.getParameter("tipoUsuario"));
-                    usuarios.guarda(usu);
-                    List<Usuario> lu = usuarios.buscaTodos();
-                    request.setAttribute("listadoUsuarios", lu);
-                    rd = request.getRequestDispatcher(srvViewPath + "/infoUsuario.jsp");
-                    break;
-                }
-            }
-
-            case "/RegistroUsuario": {
-                Usuario usu = new Usuario();
-                if (validaUsuario(request, usu)) {
-                    usuarios.crea(usu);
-                    rd = request.getRequestDispatcher(srvViewPath + "/NuevoUsuario.jsp");
-                    break;
-                }
-            }
+//    @Override
+//    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException {
+//        processRequest(request, response);
+//        RequestDispatcher rd = request.getRequestDispatcher("");
+//
+//        String action = (request.getPathInfo() != null ? request.getPathInfo() : "");
+//        switch (action) {
+//
+    @RequestMapping(value = "/edita", method = RequestMethod.POST)
+    public String editaPOST(ModelMap model, HttpServletRequest request) {
+        Usuario usu = new Usuario();
+        if (validaUsuario(request, usu)) {
+            usu.setTipoUsuario(request.getParameter("tipoUsuario"));
+            usuarios.guarda(usu);
+            List<Usuario> lu = usuarios.buscaTodos();
+            model.addAttribute("listadoUsuarios", lu);
+            return "usarios/infoUsuario";
         }
-        rd.forward(request, response);
+        return "redirect:.";
+    }
+//            case "/edita": {
+//                Usuario usu = new Usuario();
+//                if (validaUsuario(request, usu)) {
+//                    usu.setTipoUsuario(request.getParameter("tipoUsuario"));
+//                    usuarios.guarda(usu);
+//                    List<Usuario> lu = usuarios.buscaTodos();
+//                    request.setAttribute("listadoUsuarios", lu);
+//                    rd = request.getRequestDispatcher(srvViewPath + "/infoUsuario.jsp");
+//                    break;
+//                }
+//            }
+//
+
+    @RequestMapping(value = "/RegistroUsuario", method = RequestMethod.POST)
+    public String registroUsuarioPOST(ModelMap model, HttpServletRequest request) {
+        Usuario usu = new Usuario();
+        if (validaUsuario(request, usu)) {
+            usuarios.crea(usu);
+            model.addAttribute("usuario", usu);
+            return "usuarios/NuevoUsuario";
+        }
+        return "redirect:.";
     }
 
+//            case "/RegistroUsuario": {
+//                Usuario usu = new Usuario();
+//                if (validaUsuario(request, usu)) {
+//                    usuarios.crea(usu);
+//                    rd = request.getRequestDispatcher(srvViewPath + "/NuevoUsuario.jsp");
+//                    break;
+//                }
+//            }
+//        }
+//        rd.forward(request, response);
+//    }
     /**
      * Returns a short description of the servlet.
      *
      * @return a String containing servlet description
      */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+//    @Override
+//    public String getServletInfo() {
+//        return "Short description";
+//    }// </editor-fold>
     private boolean validaUsuario(HttpServletRequest request, Usuario usu) {
         usu.setApellidos(request.getParameter("apellidos"));
         usu.setContraseña(request.getParameter("pass"));

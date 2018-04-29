@@ -7,7 +7,6 @@ package com.butanclub.dao;
 
 import com.butanclub.model.Concierto;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**

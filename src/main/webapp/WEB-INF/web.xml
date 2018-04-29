@@ -13,7 +13,12 @@
         <web-resource-collection>
             <web-resource-name>Inicio sesion</web-resource-name>
             <description/>
-            <url-pattern>/usuarios/acceso</url-pattern>
+            <url-pattern>/main/usuarios</url-pattern>
+        </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>compra entrada</web-resource-name>
+            <description/>
+            <url-pattern>/main/conciertos/comprarEntrada</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <description/>

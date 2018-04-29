@@ -6,11 +6,12 @@
 package com.butanclub.dao;
 
 import com.butanclub.model.Usuario;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author Pedro Luis
- */
+ */@Repository
 public interface UsuarioDAO extends GenericDAO<Usuario,String> {
     
     

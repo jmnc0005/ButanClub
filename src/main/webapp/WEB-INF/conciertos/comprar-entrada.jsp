@@ -35,9 +35,9 @@
                 </div>
                 <br>
                 <div class="row centrar-contenido">
-                    <form action="${svlURL}/ConfirmacionCompra" method="post">
+                    <form action="${svlURL}/ConfirmacionCompra" method="POST">
                         <input type="text" name="concierto-comprado" hidden value="${conciertoCompra.id}">
-                        <input type="text" name="usuario-comprador" hidden value="${log.usuario}">
+                        <input type="text" name="usuario-comprador" hidden value="${pageContext.request.remoteUser}">
                         <label>
                             Numero entradas:
                         </label>

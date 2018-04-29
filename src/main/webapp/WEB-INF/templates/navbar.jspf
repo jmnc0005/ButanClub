@@ -5,13 +5,13 @@
     <a class="navbar-brand" href="/ButanClub">BUTAN <span>Club</span></a>
     <div class="nav-content row">
         <a class="nav-link" href="/ButanClub">Inicio <span class="sr-only">(current)</span></a>
-        <a class="nav-link" href="conciertos/listado">Conciertos</a>
+        <a class="nav-link" href="/ButanClub/main/conciertos/listado">Conciertos</a>
         <c:if test="${empty pageContext.request.remoteUser}">
-        <a class="nav-link" href="/ButanClub/usuarios">Acceso</a>
+        <a class="nav-link" href="/ButanClub/main/usuarios">Acceso</a>
         </c:if>
         
         <c:if test="${!empty pageContext.request.remoteUser}">
-        <a class="nav-link" href="/ButanClub/usuarios">Perfil</a>
+        <a class="nav-link" href="/ButanClub/main/usuarios">Perfil</a>
         </c:if>
     </div>
 </nav>

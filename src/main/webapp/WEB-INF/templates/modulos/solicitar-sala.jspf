@@ -4,7 +4,7 @@
     <h2>Solicitar sala</h2>
 </div>
 <div class="row justify-content-center">
-    <form action="/ButanClub/conciertos/solicitarSala" name="solicitar-sala" method="GET">
+    <form action="/ButanClub/main/conciertos/solicitarSala" name="solicitar-sala" method="GET">
         <label>Nombre concierto: <input type="text" name="nombre" class="form-control"></label>
         <label>Nombre artista: <input type="text" name="artista" class="form-control"></label>
         <label>Hora: <input type="time" value="now" name="hora" class="form-control"> </label>

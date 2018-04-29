@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 /**
  *
@@ -128,14 +129,13 @@ public class ConciertoController extends HttpServlet {
     }
 
     @RequestMapping(value = "/solicitarSala", method = RequestMethod.GET)
-    public String solicitarSala(ModelMap model, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public RedirectView solicitarSala(ModelMap model, HttpServletRequest request, HttpServletResponse response) throws IOException {
         Concierto c = new Concierto();
         if (validaConcierto(request, c)) {
             conciertos.crea(c);
 
-            response.sendRedirect("/ButanClub/usuarios");
         }
-        return "redirect:.";
+        return new RedirectView("/ButanClub/main/usuarios");
     }
 
     /*
@@ -177,15 +177,16 @@ public class ConciertoController extends HttpServlet {
 
     SPRING:
      */
-    @RequestMapping(value = "/compraEntrada", method = RequestMethod.POST)
+    @RequestMapping(value = "/comprarEntrada", method = RequestMethod.POST)
     public String compraEntrada(ModelMap model, HttpServletRequest request) {
         int idconcierto = Integer.parseInt(request.getParameter("idconcierto"));
+        
         Concierto c = conciertos.buscaConcierto(idconcierto);
-        model.addAttribute("conciertocompra", c);
+        model.addAttribute("conciertoCompra", c);
         return "conciertos/comprar-entrada";
     }
 
-    @RequestMapping(value = "/confirmacioncompra", method = RequestMethod.POST)
+    @RequestMapping(value = "/ConfirmacionCompra", method = RequestMethod.POST)
     public String confirmacioncompra(ModelMap model, HttpServletRequest request) {
         String usuario = request.getParameter("usuario-comprador");
         int idConcierto = Integer.parseInt(request.getParameter("concierto-comprado"));
@@ -198,7 +199,7 @@ public class ConciertoController extends HttpServlet {
         entradas.crea(entrada);
         model.addAttribute("entrada", entrada);
 
-        return "conciertos/confirmacioncompra";
+        return "conciertos/ConfirmacionCompra";
     }
 
     /*

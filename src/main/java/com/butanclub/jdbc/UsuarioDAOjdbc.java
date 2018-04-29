@@ -11,24 +11,21 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.DataSource;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author Pedro Luis
  */
+@Repository
 public class UsuarioDAOjdbc implements UsuarioDAO {
 
     private static final String connPoolName = "java:comp/env/jdbc/ButanClub";  //Tomcat
