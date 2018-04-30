@@ -28,7 +28,7 @@
                         <td>${co.fecha}</td>
                         <td>${co.hora}</td>
                         <td>
-                            <a href="${svlURL}/borraconcierto?concierto-borra=${co.id}" class="btn-primary btn" >Borrar</a>
+                            <a href="${svlURL}/borraConcierto?concierto-borra=${co.id}" class="btn-primary btn" >Borrar</a>
 
                         </td>
 
